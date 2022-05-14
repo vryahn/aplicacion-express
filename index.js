@@ -9,6 +9,14 @@ const app = express()
 //Documentación en https://expressjs.com/en/resources/middleware/body-parser.html
 const jsonParser = bodyParser.json()
 
+
+app.get('/', function (req, res) {
+    //Enviamos de regreso la respuesta
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify({ 'status': 'ok' }));
+})
+
+
 //Creamos un endpoint de login que recibe los datos como json
 app.post('/login', jsonParser, function (req, res) {
     //Imprimimos el contenido del body
