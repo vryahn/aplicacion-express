@@ -58,5 +58,14 @@ Para interactuar con la base de datos SQLite desde CodeSpace, sigan estos pasos:
 
 Recuerden que SQLite es sensible a mayúsculas y minúsculas en los nombres de las tablas y columnas. Asegúrense de escribir los comandos exactamente como se muestran.
 
+## Ejemplos
 
+# Iniciar la aplicación y habilitar el túnel (clic para descargar el video webm)
+### Nota: Usen un navegador para ver los videos
+[![Iniciar la aplicación y habilitar el túnel](assets/iniciar.gif)](assets/iniciar.webm)
 
+# Crear una rama y subir los cambios
+[![Crear una rama y subir los cambios](assets/subir_cambio.gif)](assets/subir_cambio.webm)
+
+# Usar Sqlite y Postman 
+[![Usar Sqlite y Postman](assets/insercion.gif)](assets/insercion.webm)
