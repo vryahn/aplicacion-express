@@ -1,41 +1,62 @@
-#En Windows 10/11
-* Instalar  [Node.js](https://nodejs.org/en/) (Msi de 64 ó 32 bits)
+## Crear un nuevo repositorio público
 
-#En Linux, usando la terminal de comandos
-* Instalar  Node.js usando el administrador de paquetes
-```
-sudo apt-get update
-sudo apt-get install nodejs npm
-node --version
-```
+* Copien los archivos index.js, .gitignore y package.json a este nuevo repositorio.
+* Asegúrense de realizarlo en la rama main.
 
-
-#En MacOS, usando la terminal de comandos
-* Instalar  Node.js usando [HomeBrew](https://brew.sh/)
+## Correr la aplicación 
+* Creen un CodeSpace en la rama main y usen la terminal para instalar las dependencias de la aplicación:
 ```
-brew install node
-node --version
-```
-
-
-#General
-* 
-* Descargar el código en una carpeta de su elección
-* Abrir una terminal de comandos 
-* Navegar a la carpeta en la terminal
-* Ejecutar (sólo una vez) 
-```
-npm install localtunnel
 npm install
 ```
-* Ejecutar el tunnel en otra ventana del terminal (misma ubicación)
-```
-npx lt --port 3000
-```
-* Ejecutar la aplicación
+Si se ha realizado satisfactoriamente la instalación, deberán ver una carpeta node_modules.
+
+Posteriormente, para correr la aplicación:
 ```
 node index.js
 ```
-*Copiar la url y pegarla en el código de la applicación móbil
 
-* El código incluye comentarios con la explicación del funcionamiento
+La aplicación creará el archivo de base de datos "base.sqlite3", y CodeSpace preguntará si desean hacer público el puerto 3000. Respondan que sí.
+
+Pueden verificar que el puerto sea público en la pestaña "Puertos".
+
+Copien la dirección pública que especifica CodeSpace en esta pestaña. Den clic en el enlace para aceptar que van a exponer la aplicación a Internet. 
+
+El enlace debería poder usarse desde Postman o la aplicación móvil.
+
+## Usar el archivo base.sqlite3 desde CodeSpace
+
+Para interactuar con la base de datos SQLite desde CodeSpace, sigan estos pasos:
+
+1. Abran una nueva terminal en CodeSpace.
+
+2. Inicien una sesión de SQLite con el archivo de base de datos:
+   ```
+   sqlite3 base.sqlite3
+   ```
+
+3. Para ver el esquema de la tabla "todos":
+   ```
+   .schema todos
+   ```
+
+4. Para hacer consultas SELECT en la tabla "todos":
+   ```
+   SELECT * FROM todos;
+   ```
+   Esto mostrará todos los registros en la tabla.
+
+5. Pueden hacer consultas más específicas, por ejemplo:
+   ```
+   SELECT * FROM todos WHERE created_at = <fecha>;
+   ```
+   Esto mostrará las tareas en una fecha en específico.
+
+6. Para salir de la sesión de SQLite:
+   ```
+   .quit
+   ```
+
+Recuerden que SQLite es sensible a mayúsculas y minúsculas en los nombres de las tablas y columnas. Asegúrense de escribir los comandos exactamente como se muestran.
+
+
+
