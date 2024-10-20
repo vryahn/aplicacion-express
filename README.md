@@ -60,7 +60,7 @@ Recuerden que SQLite es sensible a mayúsculas y minúsculas en los nombres de l
 
 ## Ejemplos
 
-# Iniciar la aplicación y habilitar el túnel (clic para descargar el video webm)
+# Iniciar la aplicación y habilitar el túnel (clic para descargar el video webm, despues elegir 'view raw')
 ### Nota: Usen un navegador para ver los videos
 [![Iniciar la aplicación y habilitar el túnel](assets/iniciar.gif)](assets/iniciar.webm)
 
