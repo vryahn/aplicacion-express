@@ -1,23 +1,22 @@
-//Importamos las librarías requeridas
-const express = require('express')
-const bodyParser = require('body-parser')
+// Importamos las librerías necesarias
+const express = require('express');
+const bodyParser = require('body-parser');
 const sqlite3 = require('sqlite3').verbose();
 
-//Documentación en https://expressjs.com/en/starter/hello-world.html
-const app = express()
+// Iniciamos Express
+const app = express();
 
-//Creamos un parser de tipo application/json
-//Documentación en https://expressjs.com/en/resources/middleware/body-parser.html
-const jsonParser = bodyParser.json()
+// Middleware para analizar JSON
+const jsonParser = bodyParser.json();
 
-
-// Abre la base de datos de SQLite
+// Abrimos conexión a SQLite
 let db = new sqlite3.Database('./base.sqlite3', (err) => {
     if (err) {
         console.error(err.message);
     }
-    console.log('Conectado a la base de datos SQLite.');
+    console.log('Conectado a SQLite correctamente.');
 
+    // Creamos la tabla "todos" si no existe
     db.run(`CREATE TABLE IF NOT EXISTS todos (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         todo TEXT NOT NULL,
@@ -26,66 +25,69 @@ let db = new sqlite3.Database('./base.sqlite3', (err) => {
         if (err) {
             console.error(err.message);
         } else {
-            console.log('Tabla tareas creada o ya existente.');
+            console.log('Tabla "todos" creada o ya existente.');
         }
     });
 });
 
-//Creamos un endpoint de login que recibe los datos como json
-app.post('/insert', jsonParser, function (req, res) {
-    //Imprimimos el contenido del campo todo
+// Endpoint POST para agregar una nueva tarea ("agrega_todo")
+app.post('/agrega_todo', jsonParser, (req, res) => {
     const { todo } = req.body;
-   
-    console.log(todo);
-    res.setHeader('Content-Type', 'application/json');
-    
 
     if (!todo) {
-        res.status(400).send('Falta información necesaria');
+        res.status(400).json({ error: 'Campo "todo" requerido' });
         return;
     }
-    const stmt  =  db.prepare('INSERT INTO todos (todo, created_at) VALUES (?, CURRENT_TIMESTAMP)');
 
-    stmt.run(todo, (err) => {
+    const unixTimestamp = Math.floor(Date.now() / 1000);
+
+    const stmt = db.prepare('INSERT INTO todos (todo, created_at) VALUES (?, ?)');
+
+    stmt.run(todo, unixTimestamp, function (err) {
         if (err) {
-          console.error("Error running stmt:", err);
-          res.status(500).send(err);
-          return;
-
+            console.error("Error al insertar:", err.message);
+            res.status(500).json({ error: 'Error al insertar en la base de datos' });
+            return;
         } else {
-          console.log("Insert was successful!");
+            console.log("Registro insertado con éxito.");
+            res.status(201).json({
+                id: this.lastID,
+                todo: todo,
+                created_at: unixTimestamp
+            });
         }
     });
 
     stmt.finalize();
-    
-    //Enviamos de regreso la respuesta
-    res.setHeader('Content-Type', 'application/json');
-    res.status(201).send();
-})
+});
 
+// Mismo endpoint del ejercicio anterior pero para método GET: listar los todos
+app.get('/agrega_todo', (req, res) => {
+    const sql = `SELECT id, todo, created_at FROM todos ORDER BY created_at DESC`;
 
+    db.all(sql, [], (err, rows) => {
+        if (err) {
+            console.error("Error al consultar:", err.message);
+            res.status(500).json({ error: 'Error al consultar la base de datos' });
+            return;
+        }
+        res.status(200).json(rows);
+    });
+});
 
-app.get('/', function (req, res) {
-    //Enviamos de regreso la respuesta
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify({ 'status': 'ok2' }));
-})
+// Endpoint GET de prueba en raíz
+app.get('/', (req, res) => {
+    res.status(200).json({ 'status': 'ok2' });
+});
 
-
-//Creamos un endpoint de login que recibe los datos como json
-app.post('/login', jsonParser, function (req, res) {
-    //Imprimimos el contenido del body
+// Endpoint de login (no modificado)
+app.post('/login', jsonParser, (req, res) => {
     console.log(req.body);
+    res.status(200).json({ 'status': 'ok' });
+});
 
-    //Enviamos de regreso la respuesta
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify({ 'status': 'ok' }));
-})
-
-//Corremos el servidor en el puerto 3000
+// Servidor escucha en puerto 3000
 const port = 3000;
-
 app.listen(port, () => {
-    console.log(`Aplicación corriendo en http://localhost:${port}`)
-})
+    console.log(`Aplicación corriendo en http://localhost:${port}`);
+});
